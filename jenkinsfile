@@ -48,7 +48,7 @@ pipeline {
                     sh """
                     echo "Building"
                     
-                    docker build -t Catalogue:${packageVersion} .
+                    sudo docker build -t Catalogue:${packageVersion} .
                     """
                 }
             }
