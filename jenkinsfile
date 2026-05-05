@@ -47,7 +47,7 @@ pipeline {
                 script {
                     sh """
                     echo "Building"
-                    
+                    pwd
                     sudo docker build -t catalogue:${packageVersion} .
                     """
                 }
