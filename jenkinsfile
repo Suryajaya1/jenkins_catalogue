@@ -1,0 +1,66 @@
+pipeline {
+    agent {
+        node {
+            label 'roboshop' 
+        } 
+    }
+    environment {
+        def packageVersion= ""
+    }
+    options {
+        // disableConcurrentBuilds()
+        // timeout(time: 10, unit: 'MINUTES')
+    }
+    // parameters {
+    //     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
+    //     text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
+    //     booleanParam(name: 'TOGGLE', defaultValue: false, description: 'Toggle this value')
+    //     choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
+    //     password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'Enter a password')
+    // }
+    stages {
+        stage('get-version') {
+            steps {
+                 def packageJson = readJSON file: 'package.json'
+                 packageVersion = packageJson.version
+                 echo "Package version is ${packageVersion}"
+
+                
+            }
+        }
+        stage('install dependencies') {
+            steps {
+                script{
+                    sh """
+                    npm install
+                    """
+                }
+               
+            }
+        }
+        stage('Build') {
+            
+            steps {
+                script {
+                    sh """
+                    echo "Building"
+                    
+                    docker build -t Catalogue:${packageVersion} .
+                    """
+                }
+            }
+        }
+        
+
+    post {
+        always {
+            echo "This will always run"
+        }
+        success {
+            echo "This will run only if the pipeline is successful"
+        }
+        failure {
+            echo "This will run only if the pipeline fails"
+        }
+    }
+}
