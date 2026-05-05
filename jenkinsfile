@@ -7,10 +7,10 @@ pipeline {
     environment {
         def packageVersion= ""
     }
-    options {
+    //options {
         // disableConcurrentBuilds()
         // timeout(time: 10, unit: 'MINUTES')
-    }
+    //}
     // parameters {
     //     string(name: 'PERSON', defaultValue: 'Mr Jenkins', description: 'Who should I say hello to?')
     //     text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
@@ -21,9 +21,12 @@ pipeline {
     stages {
         stage('get-version') {
             steps {
+                script{
                  def packageJson = readJSON file: 'package.json'
                  packageVersion = packageJson.version
+                 
                  echo "Package version is ${packageVersion}"
+                }
 
                 
             }
